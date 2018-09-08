@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts> 
+ 	
+	<package name="tmall" namespace="/" extends="struts-default">
+		
+		<interceptors>
+			<interceptor name="myAuthorization" class="com.tmall.interceptor.LoginInterceptor"></interceptor>
+			<interceptor name="mySwitch" class="com.tmall.interceptor.SwitchInterceptor"></interceptor>
+			
+			<!-- 定义拦截器栈 -->
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="defaultStack"/>
+				<interceptor-ref name="myAuthorization"/>
+			</interceptor-stack>
+		</interceptors>		
+		<!-- 定义默认的拦截器引用 -->
+	<!-- <default-interceptor-ref name="myStack"/>	 -->
+	
+		<global-results>
+			<result name="input" type="dispatcher">/login.jsp</result>
+		</global-results>
+
+		<action name="*Action" class="com.tmall.action.LoginAction" method="execute" >		
+		    <result name="success" type="redirectAction">list</result>
+		</action>
+		
+		<action name="*_*" class="com.tmall.action.{1}Action" method="execute">
+			<result name="success">/reg_success.jsp</result>
+			<result name="input">/register.jsp</result>
+		</action>
+		
+		<action name="list" class="com.tmall.action.CategoryInfoAction" method="execute">
+			<result name="success">/index.jsp</result>
+			<interceptor-ref name="myStack"></interceptor-ref>	
+		</action>
+		
+	</package>
+</struts>
